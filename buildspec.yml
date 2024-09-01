@@ -1,0 +1,27 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      docker: 20
+    commands:
+      - echo Installing AWS CLI...
+      - apt-get update -y
+      - apt-get install -y awscli
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login-password --region your-region | docker login --username AWS --password-stdin your-account-id.dkr.ecr.your-region.amazonaws.com)
+  build:
+    commands:
+      - echo Building the Docker image...
+      - docker build -t your-image-name .
+      - docker tag your-image-name:latest your-account-id.dkr.ecr.your-region.amazonaws.com/your-repo-name:latest
+  post_build:
+    commands:
+      - echo Pushing the Docker image...
+      - docker push your-account-id.dkr.ecr.your-region.amazonaws.com/your-repo-name:latest
+      - echo Build completed on `date`
+artifacts:
+  files:
+    - '**/*'
