@@ -1,19 +1,16 @@
 version: 0.2
 
 phases:
-    commands:
-      - echo Installing Docker...
-      - docker --version
-  pre_build:
-    commands:
-      - echo Starting the build process...
   build:
     commands:
-      - echo Building the Docker image...
+      - echo Docker version:
+      - docker --version
+      - echo Building Docker image...
       - docker build -t my-image .
   post_build:
     commands:
       - echo Build completed!
+
 artifacts:
   files:
     - '**/*'
